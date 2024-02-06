@@ -14,7 +14,7 @@ public class Register {
     @Column(name = "register_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "numFlight") // Номер рейса
     private String numFlight;

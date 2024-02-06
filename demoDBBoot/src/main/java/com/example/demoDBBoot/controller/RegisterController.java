@@ -29,4 +29,22 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
+    @GetMapping("/update")
+    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data) {
+        try {
+            service.save(data);
+            return ResponseEntity.ok(new DataBaseResponse(true, "В рейс были внесены изменения"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
+        }
+    }
+    @GetMapping("/delete")
+    public ResponseEntity<DataBaseResponse> delete(@RequestBody Register data) {
+        try {
+            service.delete(data);
+            return ResponseEntity.ok(new DataBaseResponse(true, "Рейс был удален"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
+        }
+    }
 }

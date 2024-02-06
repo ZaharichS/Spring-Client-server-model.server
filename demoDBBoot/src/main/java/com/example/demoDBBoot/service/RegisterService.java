@@ -13,6 +13,6 @@ public class RegisterService {
     }
 
     public void save(Register registerFlight) { repo.save(registerFlight); }
-    public void delete(Long id) { repo.deleteById(id); }
+    public void delete(Register registerFlight) { repo.delete(registerFlight); }
     public Iterable<Register> getAll() { return repo.findAll(); }
 }
