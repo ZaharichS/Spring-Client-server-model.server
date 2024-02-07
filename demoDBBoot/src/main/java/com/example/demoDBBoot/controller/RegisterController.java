@@ -18,10 +18,21 @@ public class RegisterController {
         return ResponseEntity.ok( new RegisterResponse((service.getAll())));
     }
     @PostMapping("/add")
-    public ResponseEntity registration(@RequestBody Register data) {
+    public ResponseEntity<DataBaseResponse> registration(@RequestBody Register data) {
         try {
             service.save(data);
             return ResponseEntity.ok(new DataBaseResponse(true, "Полёт добавлен"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
+        }
+    }
+    @GetMapping("find")
+    public ResponseEntity<DataBaseResponse> find(@RequestParam Long id, Register data) {
+        try {
+            if (data.getId() == id) {
+                service.findById(id);
+            }
+            return ResponseEntity.ok(new DataBaseResponse(true, "Полёт найден"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
