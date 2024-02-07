@@ -13,4 +13,5 @@ public class RegisterResponse extends DataBaseResponse {
     }
 
     private Iterable<Register> data;
+
 }

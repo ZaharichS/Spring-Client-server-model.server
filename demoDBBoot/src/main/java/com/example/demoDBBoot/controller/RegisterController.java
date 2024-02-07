@@ -1,10 +1,13 @@
 package com.example.demoDBBoot.controller;
 
 import com.example.demoDBBoot.entity.Register;
+import com.example.demoDBBoot.repo.RegisterRepo;
 import com.example.demoDBBoot.responses.DataBaseResponse;
 import com.example.demoDBBoot.responses.RegisterResponse;
 import com.example.demoDBBoot.service.RegisterService;
+import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,12 +30,15 @@ public class RegisterController {
         }
     }
     @GetMapping("find")
-    public ResponseEntity<DataBaseResponse> find(@RequestParam Long id, Register data) {
+    public ResponseEntity<DataBaseResponse> find(@RequestParam Long id)  {
         try {
-            if (data.getId() == id) {
-                service.findById(id);
+            if (service.findById(id).isPresent()) {
+                service.findById(id).get();
+                System.out.println(service.findById(id).get()); // временное отображение данных по id в консоль
+                return ResponseEntity.ok(new DataBaseResponse(true, "Полёт найден"));
+            } else  {
+                return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не найден!"));
             }
-            return ResponseEntity.ok(new DataBaseResponse(true, "Полёт найден"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }

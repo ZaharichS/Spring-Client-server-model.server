@@ -20,8 +20,8 @@ public class RegisterService {
     public void delete(Long id) {
         repo.deleteById(id);
     }
-    public void findById(Long id  /*,Register register*/) {
-        repo.findById(id);
+    public Optional<Register> findById(Long id) {
+        return repo.findById(id);
     }
     public Iterable<Register> getAll() {
         return repo.findAll();
