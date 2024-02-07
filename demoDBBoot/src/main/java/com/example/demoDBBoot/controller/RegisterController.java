@@ -5,10 +5,7 @@ import com.example.demoDBBoot.responses.DataBaseResponse;
 import com.example.demoDBBoot.responses.RegisterResponse;
 import com.example.demoDBBoot.service.RegisterService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/register")
@@ -20,8 +17,8 @@ public class RegisterController {
     public ResponseEntity<DataBaseResponse> getAll() {
         return ResponseEntity.ok( new RegisterResponse((service.getAll())));
     }
-    @GetMapping("/add")
-    public ResponseEntity<DataBaseResponse> registration(@RequestBody Register data) {
+    @PostMapping("/add")
+    public ResponseEntity registration(@RequestBody Register data) {
         try {
             service.save(data);
             return ResponseEntity.ok(new DataBaseResponse(true, "Полёт добавлен"));
@@ -29,19 +26,21 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
-    @GetMapping("/update")
-    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data) {
+    @PostMapping("/update")
+    public ResponseEntity update(@RequestBody Register data) {
         try {
-            service.save(data);
+            if (data.getId() != null) {
+                service.save(data);
+            }
             return ResponseEntity.ok(new DataBaseResponse(true, "В рейс были внесены изменения"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
-    @GetMapping("/delete")
-    public ResponseEntity<DataBaseResponse> delete(@RequestBody Register data) {
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@RequestParam Long id) {
         try {
-            service.delete(data);
+            service.delete(id);
             return ResponseEntity.ok(new DataBaseResponse(true, "Рейс был удален"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
