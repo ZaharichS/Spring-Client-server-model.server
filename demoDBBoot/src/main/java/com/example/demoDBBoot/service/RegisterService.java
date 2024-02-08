@@ -14,14 +14,13 @@ public class RegisterService {
         this.repo = repo;
     }
 
-    public Register save(Register registerFlight) {
+    public void save(Register registerFlight) {
         repo.save(registerFlight);
-        return registerFlight;
     }
-    public void delete(long id) {
+    public void delete(Long id) {
         repo.deleteById(id);
     }
-    public Optional<Register> findById(long id) {
+    public Optional<Register> findById(Long id  /*,Register register*/) {
         return repo.findById(id);
     }
     public Iterable<Register> getAll() {

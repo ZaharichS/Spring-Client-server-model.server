@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
+
 @RestController
 @RequestMapping("api/v1/register")
 public class RegisterController {
@@ -26,8 +28,12 @@ public class RegisterController {
     @PostMapping("/add")
     public ResponseEntity<DataBaseResponse> registration(@RequestBody Register data) {
         try {
-            service.save(data);
-            return ResponseEntity.ok(new DataBaseResponse(true, "Полёт добавлен"));
+            if (service.findById(data.getId()).isEmpty()) {
+                service.save(data);
+                return ResponseEntity.ok(new DataBaseResponse(true, "Полёт добавлен"));
+            } else  {
+                return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не найден!"));
+            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
@@ -46,11 +52,29 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
-   @PutMapping("{id}")
-    public ResponseEntity<?> update(@RequestBody Register data, @PathVariable long id) {
+   @PutMapping("/update{id}")
+    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data, @RequestParam long id) {
         try {
-                service.save(data);
-                return ResponseEntity.ok(new DataBaseResponse(true, "В рейс были внесены изменения"));
+            if (/*service.findById(id).isPresent()*/ service.findById(data.getId()).isEmpty()) {
+                Register updateReg = registerRepo.findById(id)
+                        .orElseThrow();
+
+                updateReg.setNumFlight(data.getNumFlight());
+                updateReg.setTrip(data.getTrip());
+                updateReg.setStopoverPoints(data.getStopoverPoints());
+                updateReg.setTimeFlight(data.getTimeFlight());
+                updateReg.setDayFlight(data.getDayFlight());
+                updateReg.setAvailabilitySeatsFlight(data.getAvailabilitySeatsFlight());
+
+                service.findById(id).get();
+                registerRepo.save(updateReg);
+                System.out.println(service.findById(id).get()); // временное отображение данных по id в консоль
+                return ResponseEntity.ok(new DataBaseResponse(true, "Полёт изменен"));
+            } else  {
+                return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не был найден и не был изменен!"));
+            }
+                //service.save(data);
+                //return ResponseEntity.ok(new DataBaseResponse(true, "В рейс были внесены изменения"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
