@@ -2,6 +2,7 @@ package com.example.demoDBBoot.controller;
 
 import com.example.demoDBBoot.entity.Register;
 import com.example.demoDBBoot.repo.RegisterRepo;
+import com.example.demoDBBoot.responses.CheckResponse;
 import com.example.demoDBBoot.responses.DataBaseResponse;
 import com.example.demoDBBoot.responses.RegisterResponse;
 import com.example.demoDBBoot.service.RegisterService;
@@ -44,7 +45,8 @@ public class RegisterController {
             if (service.findById(id).isPresent()) {
                 service.findById(id).get();
                 System.out.println(service.findById(id).get()); // временное отображение данных по id в консоль
-                return ResponseEntity.ok(new DataBaseResponse(true, "Полёт найден"));
+                //return ResponseEntity.ok(new DataBaseResponse(true, "Полёт найден"));
+                return ResponseEntity.ok( new CheckResponse( service.findById(id) ));
             } else  {
                 return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не найден!"));
             }
