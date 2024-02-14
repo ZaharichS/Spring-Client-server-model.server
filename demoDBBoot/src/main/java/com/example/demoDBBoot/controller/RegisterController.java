@@ -39,7 +39,7 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
-    @GetMapping("/find")
+    @GetMapping("/find{id}")
     public ResponseEntity<DataBaseResponse> find(@RequestParam long id)  {
         try {
             if (service.findById(id).isPresent()) {
@@ -55,9 +55,9 @@ public class RegisterController {
         }
     }
    @PutMapping("/update{id}")
-    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data, @RequestParam long id) {
+    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data, @RequestParam(name="id") long id) {
         try {
-            if (/*service.findById(id).isPresent()*/ service.findById(data.getId()).isEmpty()) {
+            if (service.findById(data.getId()).isEmpty()) {
                 Register updateReg = registerRepo.findById(id)
                         .orElseThrow();
 
@@ -81,27 +81,7 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
-/*@PutMapping("{id}")
-public ResponseEntity update(@RequestBody Register data, @PathVariable long id) {
-    try {
-        Register updateReg = registerRepo.findById(id)
-                        .orElseThrow();
-        updateReg.setTimeFlight(data.getTimeFlight());
-
-        registerRepo.save(updateReg);
-        return ResponseEntity.ok(updateReg);
-*//*        if (data.getId() != null) {
-            service.save(data);
-            return ResponseEntity.ok(new DataBaseResponse(true, "В рейс были внесены изменения"));
-        } else  {
-            return ResponseEntity.badRequest().body(new DataBaseResponse(false, "рейс не найден!"));
-        }*//*
-
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
-    }
-}*/
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete{id}")
     public ResponseEntity delete(@RequestParam long id) {
         try {
             service.delete(id);
