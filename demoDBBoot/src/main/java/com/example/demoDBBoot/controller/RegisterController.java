@@ -54,11 +54,11 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
-   @PutMapping("/update{id}")
-    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data, @RequestParam(name="id") long id) {
+   @PutMapping("/update/{id}")
+    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data, @PathVariable(value = "id") String id) {
         try {
             if (service.findById(data.getId()).isEmpty()) {
-                Register updateReg = registerRepo.findById(id)
+                Register updateReg = registerRepo.findById(Long.valueOf(id))
                         .orElseThrow();
 
                 updateReg.setNumFlight(data.getNumFlight());
@@ -68,9 +68,9 @@ public class RegisterController {
                 updateReg.setDayFlight(data.getDayFlight());
                 updateReg.setAvailabilitySeatsFlight(data.getAvailabilitySeatsFlight());
 
-                service.findById(id).get();
+                service.findById(Long.valueOf(id)).get();
                 registerRepo.save(updateReg);
-                System.out.println(service.findById(id).get()); // временное отображение данных по id в консоль
+                System.out.println(service.findById(Long.valueOf(id)).get()); // временное отображение данных по id в консоль
                 return ResponseEntity.ok(new DataBaseResponse(true, "Полёт изменен"));
             } else  {
                 return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не был найден и не был изменен!"));
