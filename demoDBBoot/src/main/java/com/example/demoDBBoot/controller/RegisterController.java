@@ -54,7 +54,7 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
     }
-   @PutMapping("/update/{id}")
+   /*@PutMapping("/update/{id}")
     public ResponseEntity<DataBaseResponse> update(@RequestBody Register data, @PathVariable(value = "id") String id) {
         try {
             if (service.findById(data.getId()).isEmpty()) {
@@ -80,7 +80,22 @@ public class RegisterController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
         }
+    }*/
+
+    @PostMapping("/update")
+    public ResponseEntity<DataBaseResponse> update(@RequestBody Register data) {
+        try {
+            if (service.findById(data.getId()).isPresent()) {
+                service.save(data);
+                return ResponseEntity.ok(new DataBaseResponse(true, "Полёт изменен"));
+            } else {
+                return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не был найден и не был изменен!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
+        }
     }
+
     @DeleteMapping("/delete{id}")
     public ResponseEntity delete(@RequestParam long id) {
         try {
