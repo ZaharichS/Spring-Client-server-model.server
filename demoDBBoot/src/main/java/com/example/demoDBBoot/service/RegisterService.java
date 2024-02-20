@@ -14,8 +14,8 @@ public class RegisterService {
         this.repo = repo;
     }
 
-    public void save(Register registerFlight) {
-        repo.save(registerFlight);
+    public Register save(Register registerFlight) {
+        return repo.save(registerFlight);
     }
     public void delete(Long id) {
         repo.deleteById(id);

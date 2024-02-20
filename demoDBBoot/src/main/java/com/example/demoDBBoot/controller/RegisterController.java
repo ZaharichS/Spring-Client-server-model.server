@@ -4,6 +4,7 @@ import com.example.demoDBBoot.entity.Register;
 import com.example.demoDBBoot.repo.RegisterRepo;
 import com.example.demoDBBoot.responses.CheckResponse;
 import com.example.demoDBBoot.responses.DataBaseResponse;
+import com.example.demoDBBoot.responses.RefreshResponse;
 import com.example.demoDBBoot.responses.RegisterResponse;
 import com.example.demoDBBoot.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,16 @@ public class RegisterController {
         return ResponseEntity.ok( new RegisterResponse((service.getAll())));
     }
     @PostMapping("/add")
-    public ResponseEntity<DataBaseResponse> registration(@RequestBody Register data) {
+    public ResponseEntity<RefreshResponse> registration(@RequestBody Register data) {
         try {
             if (service.findById(data.getId()).isEmpty()) {
                 service.save(data);
-                return ResponseEntity.ok(new DataBaseResponse(true, "Полёт добавлен"));
+                return ResponseEntity.ok(new RefreshResponse(service.save(data).getId()));
             } else  {
-                return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не найден!"));
+                return ResponseEntity.badRequest().body(new RefreshResponse(/*false, "Полёт не найден!"*/ service.save(data).getId()));
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
+            return ResponseEntity.badRequest().body(new  RefreshResponse(/*false, "Полёт не найден!"*/ service.save(data).getId()));
         }
     }
     @GetMapping("/find{id}")
