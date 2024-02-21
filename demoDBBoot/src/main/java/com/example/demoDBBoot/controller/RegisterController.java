@@ -25,19 +25,19 @@ public class RegisterController {
 
     @GetMapping("/all")
     public ResponseEntity<DataBaseResponse> getAll() {
-        return ResponseEntity.ok( new RegisterResponse((service.getAll())));
+        return ResponseEntity.ok( new RegisterResponse(true, "Полеты", service.getAll()));
     }
     @PostMapping("/add")
-    public ResponseEntity<RefreshResponse> registration(@RequestBody Register data) {
+    public ResponseEntity<DataBaseResponse> registration(@RequestBody Register data) {
         try {
             if (service.findById(data.getId()).isEmpty()) {
-                service.save(data);
-                return ResponseEntity.ok(new RefreshResponse(service.save(data).getId()));
+                Register reg = service.save(data);
+                return ResponseEntity.ok(new RefreshResponse(true, "Полет добавлен", reg.getId()));
             } else  {
-                return ResponseEntity.badRequest().body(new RefreshResponse(/*false, "Полёт не найден!"*/ service.save(data).getId()));
+                return ResponseEntity.badRequest().body(new RefreshResponse(false, "Полет не был добавлен", null));
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new  RefreshResponse(/*false, "Полёт не найден!"*/ service.save(data).getId()));
+            return ResponseEntity.badRequest().body(new  RefreshResponse(true, "Полет не был добавлен",  null));
         }
     }
     @GetMapping("/find{id}")
@@ -87,13 +87,13 @@ public class RegisterController {
     public ResponseEntity<DataBaseResponse> update(@RequestBody Register data) {
         try {
             if (service.findById(data.getId()).isPresent()) {
-                service.save(data);
-                return ResponseEntity.ok(new DataBaseResponse(true, "Полёт изменен"));
+                Register reg = service.save(data);
+                return ResponseEntity.ok(new RefreshResponse(true, "Полет изменен", reg.getId()));
             } else {
-                return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не был найден и не был изменен!"));
+                return ResponseEntity.badRequest().body(new RefreshResponse(false, "Полет не изменен", null));
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new DataBaseResponse(false, e.getMessage()));
+            return ResponseEntity.badRequest().body(new RefreshResponse(false, "Полет не изменен", null));
         }
     }
 

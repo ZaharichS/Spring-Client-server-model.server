@@ -6,10 +6,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RefreshResponse extends DataBaseResponse{
-    private long id;
+    private Long id;
 
-    public RefreshResponse(long id) {
-        super(true, "Полет добавлен");
+    public RefreshResponse(Boolean success, String message, Long id) {
+        super(success, message);
         this.id = id;
     }
 }
