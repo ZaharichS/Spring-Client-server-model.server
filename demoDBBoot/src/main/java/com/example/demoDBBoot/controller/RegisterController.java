@@ -32,7 +32,8 @@ public class RegisterController {
         try {
             if (service.findById(data.getId()).isEmpty()) {
                 Register reg = service.save(data);
-                return ResponseEntity.ok(new RefreshResponse(true, "Полет добавлен", reg.getId()));
+                return ResponseEntity.ok(new RefreshResponse(true, "da", reg));
+                //return ResponseEntity.ok(new RefreshResponse(true, "Полет добавлен", reg.getId()));
             } else  {
                 return ResponseEntity.badRequest().body(new RefreshResponse(false, "Полет не был добавлен", null));
             }
@@ -45,9 +46,8 @@ public class RegisterController {
         try {
             if (service.findById(id).isPresent()) {
                 service.findById(id).get();
-                System.out.println(service.findById(id).get()); // временное отображение данных по id в консоль
-                //return ResponseEntity.ok(new DataBaseResponse(true, "Полёт найден"));
-                return ResponseEntity.ok( new CheckResponse( service.findById(id) ));
+                System.out.println(service.findById(id).get());
+                return ResponseEntity.ok( new CheckResponse(service.findById(id)));
             } else  {
                 return ResponseEntity.badRequest().body(new DataBaseResponse(false, "Полёт не найден!"));
             }
@@ -88,12 +88,12 @@ public class RegisterController {
         try {
             if (service.findById(data.getId()).isPresent()) {
                 Register reg = service.save(data);
-                return ResponseEntity.ok(new RefreshResponse(true, "Полет изменен", reg.getId()));
+                return ResponseEntity.ok(new RefreshResponse(true, "Полет изменен", reg));
             } else {
                 return ResponseEntity.badRequest().body(new RefreshResponse(false, "Полет не изменен", null));
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new RefreshResponse(false, "Полет не изменен", null));
+            return ResponseEntity.badRequest().body(new RefreshResponse(false, e.getMessage(), null));
         }
     }
 

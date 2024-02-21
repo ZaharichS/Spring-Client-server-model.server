@@ -9,7 +9,7 @@ import java.util.Optional;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RegisterResponse extends DataBaseResponse {
-    public  RegisterResponse(Boolean success,String message,Iterable<Register> data) {
+    public  RegisterResponse(Boolean success,String message, Iterable<Register> data) {
         super(success,message);
         this.data = data;
     }
